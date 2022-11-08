@@ -1,0 +1,293 @@
+{% extends 'base.html' %}
+<!--  -->
+{% block content %}
+<!--  -->
+{% if not data %}
+<div class="grid grid-flow-row md:grid-flow-col items-stretch gap-12">
+  <div class="flex flex-col border-b md:border-b-0 md:border-r py-12">
+    <div class="flex items-center gap-3 mb-6">
+      <span
+        class="w-8 h-8 rounded-full bg-blue-200 flex items-center justify-center font-bold">
+        1
+      </span>
+      <h2 class="text-xl font-semibold text-gray-900 dark:text-white">
+        Export the lead data
+      </h2>
+    </div>
+    <ul class="space-y-1 max-w-md list-disc list-inside mb-auto">
+      <li>
+        <a
+          href="https://reddirtequipment.com/admin"
+          target="_blank"
+          class="text-blue-700 hover:underline dark:text-blue-400"
+          >reddirtequipment.com</a
+        >
+      </li>
+      <li>
+        <a
+          href="https://mahindradealerportal.com/"
+          target="_blank"
+          class="text-blue-700 hover:underline dark:text-blue-400"
+          >Mahindra USA</a
+        >
+      </li>
+      <li>
+        <a
+          href="https://www.kioti.com/dealerden/"
+          target="_blank"
+          class="text-blue-700 hover:underline dark:text-blue-400"
+          >Kioti</a
+        >
+      </li>
+    </ul>
+
+    <form
+      action="{{ url_for('settings') }}"
+      method="POST"
+      enctype="multipart/form-data"
+      class="pt-6 w-full max-w-md space-y-6">
+      <div>
+        <label
+          for="api_token"
+          class="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300"
+          >Pipedrive API Token</label
+        >
+        <p class="mb-2 text-sm text-gray-500 dark:text-gray-400">
+          Find this under
+          <a
+            href="https://reddirtequipmentcom.pipedrive.com/settings/api"
+            target="_blank"
+            class="text-sm text-blue-700 hover:underline dark:text-blue-400"
+            >personal preferences</a
+          >
+          in Pipedrive.
+        </p>
+        <div class="flex items-center gap-2 5">
+          {% if settings %}
+          <input
+            type="text"
+            id="api_token"
+            name="api_token"
+            value="{{ settings }}"
+            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" />
+          {% else %}
+          <input
+            type="text"
+            id="api_token"
+            name="api_token"
+            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" />
+          {% endif %}
+
+          <button
+            type="submit"
+            class="p-2.5 shadow-sm text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke-width="1.5"
+              stroke="currentColor"
+              class="w-6 h-6">
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="M4.5 12.75l6 6 9-13.5" />
+            </svg>
+          </button>
+        </div>
+      </div>
+    </form>
+  </div>
+
+  <div class="py-12">
+    <div class="flex items-center gap-3 mb-6">
+      <span
+        class="w-8 h-8 rounded-full bg-blue-200 flex items-center justify-center font-bold">
+        2
+      </span>
+      <h2 class="text-xl font-semibold text-gray-900 dark:text-white">
+        Parse data fpr Pipedrive
+      </h2>
+    </div>
+
+    <form
+      action="{{ url_for('parse') }}"
+      method="POST"
+      enctype="multipart/form-data"
+      class="w-full space-y-6">
+      <div>
+        <label
+          class="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300"
+          for="file_input"
+          >Lead source file</label
+        >
+        <input
+          class="block w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 cursor-pointer dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400"
+          id="file_input"
+          name="file"
+          accept=".csv"
+          type="file" />
+      </div>
+      <div>
+        <label
+          for="template"
+          class="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-400"
+          >Select template</label
+        >
+        <select
+          id="template"
+          name="template"
+          class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+          <option selected value="default">Choose a template</option>
+          <option value="1">Mahindra USA</option>
+          <option value="2">Dealer Spike</option>
+          <option value="3">Kioti</option>
+          <option value="4">Other</option>
+        </select>
+      </div>
+      <div>
+        <label
+          for="start"
+          class="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300"
+          >Start date</label
+        >
+        <input
+          type="date"
+          id="start"
+          name="start"
+          class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" />
+        <p class="mt-2 text-sm text-gray-500 dark:text-gray-400">
+          Leave blank to parse the entire file.
+        </p>
+      </div>
+      <div>
+        <button
+          type="submit"
+          class="shadow-sm flex items-center justify-center gap-3 text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg px-5 py-2.5 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">
+          Parse leads
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke-width="1.5"
+            stroke="currentColor"
+            class="w-6 h-6">
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              d="M17.25 8.25L21 12m0 0l-3.75 3.75M21 12H3" />
+          </svg>
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+
+{% else %}
+<h1 class="text-3xl font-semibold text-gray-900 dark:text-white mb-6">
+  {{ data|length }} items need approval
+</h1>
+<p class="text-gray-700 leading-loose mb-12">
+  This is a preview of the data that will be added to Pipedrive. Relational IDs
+  (lead_id, person_id, etc.) should be blank. Check the approve checkbox for
+  each item you want to add to the CRM. When you're done, click the button at
+  the bottom of the page to add the selected items to Pipedrive.
+</p>
+
+<div class="flex flex-col md:flex-row items-center gap-3 mb-12">
+  <a
+    href="{{ url_for('index') }}"
+    class="shadow-sm w-full md:w-auto flex items-center justify-center gap-2.5 py-2.5 px-5 font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700">
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      fill="none"
+      viewBox="0 0 24 24"
+      stroke-width="1.5"
+      stroke="currentColor"
+      class="w-6 h-6">
+      <path
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18" />
+    </svg>
+    Select a different file
+  </a>
+  <button
+    type="button"
+    onclick="approveAll()"
+    class="shadow-sm w-full md:w-auto flex items-center justify-center gap-2.5 py-2.5 px-5 font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700">
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      fill="none"
+      viewBox="0 0 24 24"
+      stroke-width="1.5"
+      stroke="currentColor"
+      class="w-6 h-6">
+      <path
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        d="M4.5 12.75l6 6 9-13.5" />
+    </svg>
+    Approve all
+  </button>
+</div>
+
+<form
+  action="{{ url_for('create') }}"
+  method="POST"
+  class="w-full flex flex-col md:flex-row md:flex-wrap gap-6 md:gap-12">
+  {% for item in data %}
+  <div
+    class="bg-gray-50 rounded-lg shadow-sm hover:shadow-md border-gray-200 border p-6 w-full md:max-w-md flex flex-col">
+    <input type="hidden" name="data-{{ loop.index }}" value="{{ item }}" />
+    <h6 class="font-bold text-gray-900 dark:text-white mb-2">Person</h6>
+    <p class="text-gray-900">Name: {{ item.person.name}}</p>
+    <p class="text-gray-900">Email: {{ item.person.email}}</p>
+    <p class="text-gray-900">Phone: {{ item.person.phone}}</p>
+    <p class="text-gray-900">Visible to: {{ item.person.visible_to}}</p>
+    <hr class="my-4" />
+    <h6 class="font-bold text-gray-900 dark:text-white mb-2">Lead</h6>
+    <p class="text-gray-900">Title: {{ item.lead.title}}</p>
+    <p class="text-gray-900">Person ID: {{ item.lead.person_id}}</p>
+    <hr class="my-4" />
+    <h6 class="font-bold text-gray-900 dark:text-white mb-2">Note</h6>
+    <p class="text-gray-900">Content: {{ item.note.content }}</p>
+    <hr class="my-4" />
+    <div class="mt-auto flex items-center">
+      <input
+        id="approve-{{ loop.index }}"
+        name="approve-{{ loop.index }}"
+        type="checkbox"
+        class="w-5 h-5 text-blue-600 bg-white rounded border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600" />
+      <label
+        for="approve-{{ loop.index }}"
+        class="ml-3 font-medium text-gray-900 dark:text-gray-300"
+        >Looks good, approve</label
+      >
+    </div>
+  </div>
+  {% endfor %}
+  <div class="w-full mb-12">
+    <button
+      type="submit"
+      class="shadow-sm flex items-center justofy-center gap-2.5 text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg px-5 py-2.5 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">
+      Finish. Create in Pipedrive
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        fill="none"
+        viewBox="0 0 24 24"
+        stroke-width="1.5"
+        stroke="currentColor"
+        class="w-6 h-6">
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          d="M17.25 8.25L21 12m0 0l-3.75 3.75M21 12H3" />
+      </svg>
+    </button>
+  </div>
+</form>
+
+{% endif %}
+<!--  -->
+{% endblock %}
