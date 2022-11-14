@@ -121,7 +121,8 @@ def create_app() -> Flask:
                 
                 # Render template
                 return render_template('index.html', data=data)
-
+                    
+                                
             else:
                 flash('Please select a valid template', 'error')
                 return redirect('/')
