@@ -1,6 +1,7 @@
 import csv
 import json
 import os
+import tempfile
 from datetime import datetime
 from uuid import uuid1
 
@@ -12,7 +13,6 @@ from .utils.settings import get_token, set_token
 
 '''
 TODO: 
-- Add acquisition source to lead after creation
 - Update /tmp folder to use OS tmp folder
 '''
 
@@ -53,7 +53,8 @@ def create_app() -> Flask:
     
         # save csv file to tmp folder
         file = request.files['file']
-        filename = f'/tmp/{uuid1()}.csv'
+        tmp_dir = tempfile.gettempdir()
+        filename = f'{tmp_dir}\\{uuid1()}.csv'
         file.save(filename)
         
         data = []
@@ -117,7 +118,11 @@ def create_app() -> Flask:
                         })
                         
                 # Remove tmp file
-                os.remove(filename)
+                try:
+                    os.remove(filename)
+                except:
+                    print('[!] Error removing tmp file')
+                    pass
                 
                 # Render template
                 return render_template('index.html', data=data)
